@@ -3,6 +3,7 @@ import 'package:firebase_project/component/forgot_password.dart';
 import 'package:firebase_project/component/home_page.dart';
 import 'package:firebase_project/component/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -71,9 +72,24 @@ class _LoginPageState extends State<LoginPage> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  // loginWithGoogle() async {
-  //   final GoogleSignInAccount accounts = await GoogleSignIn.signIn();
-  // }
+  loginWithGoogle() async {
+    try {
+      final GoogleSignInAccount? accounts = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication userAccount =
+          accounts!.authentication as GoogleSignInAuthentication;
+
+      final credentials = GoogleAuthProvider.credential(
+          accessToken: userAccount.accessToken, idToken: userAccount.idToken);
+
+      await FirebaseAuth.instance.signInWithCredential(credentials);
+
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } catch (e) {
+      showMessage(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +151,22 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: const Text('Sign Up'),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                  '---------------------------sign in using below method--------------------'),
+              SizedBox(
+                height: 10,
+              ),
+              IconButton(
+                  onPressed: () {
+                    loginWithGoogle();
+                  },
+                  icon: Icon(
+                    Icons.g_mobiledata_sharp,
+                    size: 50.0,
+                  ))
             ],
           ),
         ),
