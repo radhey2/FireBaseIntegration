@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/auth/finger_auth.dart';
 import 'package:firebase_project/auth/phone_auth.dart';
 import 'package:firebase_project/component/forgot_password.dart';
 import 'package:firebase_project/component/home_page.dart';
@@ -155,8 +156,9 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                  '---------------------------sign in using below method--------------------'),
+              Center(
+                child: Text('-----sign in using below method-----'),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -178,7 +180,15 @@ class _LoginPageState extends State<LoginPage> {
                           MaterialPageRoute(builder: (context) => PhoneAuth()),
                         );
                       },
-                      icon: Icon(Icons.phone))
+                      icon: Icon(Icons.phone)),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FingureAuth()));
+                      },
+                      icon: Icon(Icons.fingerprint))
                 ],
               )
             ],
