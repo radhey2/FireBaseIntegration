@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/component/login_page.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -10,10 +11,32 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
 
   forgotPassword() async {
-    await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: emailController.text);
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text);
+      showMessage('If the email is registered, a reset link will be sent.');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    } catch (e) {
+      showMessage("Email is not registered");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Method to display messages using SnackBar
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -35,11 +58,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           SizedBox(
             height: 20,
           ),
-          ElevatedButton(
-              onPressed: () {
-                forgotPassword();
-              },
-              child: Text('Reset password')),
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ElevatedButton(
+                  onPressed: () {
+                    forgotPassword();
+                  },
+                  child: Text('Reset password')),
         ],
       ),
     );
