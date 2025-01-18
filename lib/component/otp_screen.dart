@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/component/home_page.dart';
 import 'package:firebase_project/main.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,27 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   TextEditingController otpController = TextEditingController();
+  verifyOtp() async {
+    PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
+        verificationId: widget.verificationId, smsCode: otpController.text);
+
+    try {
+      await FirebaseAuth.instance
+          .signInWithCredential(authCredential)
+          .then((value) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      });
+    } catch (e) {
+      showMessage(e.toString());
+    }
+  }
+
+  // Method to display messages using SnackBar
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
             controller: otpController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
+                prefix: Text('+91'),
                 hintText: 'Enter OTP',
                 suffix: Icon(Icons.phone),
                 border: OutlineInputBorder(
@@ -32,20 +55,7 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           ElevatedButton(
               onPressed: () async {
-                try {
-                  PhoneAuthCredential phoneAuthCredential =
-                      await PhoneAuthProvider.credential(
-                          verificationId: widget.verificationId,
-                          smsCode: otpController.text.toString());
-                  FirebaseAuth.instance
-                      .signInWithCredential(phoneAuthCredential)
-                      .then((value) => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyApp()))
-                          });
-                } catch (e) {}
+                verifyOtp();
               },
               child: Text('OTP'))
         ],

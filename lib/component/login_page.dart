@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/auth/phone_auth.dart';
 import 'package:firebase_project/component/forgot_password.dart';
 import 'package:firebase_project/component/home_page.dart';
 import 'package:firebase_project/component/sign_up.dart';
@@ -159,14 +160,27 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 10,
               ),
-              IconButton(
-                  onPressed: () {
-                    loginWithGoogle();
-                  },
-                  icon: Icon(
-                    Icons.g_mobiledata_sharp,
-                    size: 50.0,
-                  ))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        loginWithGoogle();
+                      },
+                      icon: Icon(
+                        Icons.g_mobiledata_sharp,
+                        size: 50.0,
+                      )),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PhoneAuth()),
+                        );
+                      },
+                      icon: Icon(Icons.phone))
+                ],
+              )
             ],
           ),
         ),
