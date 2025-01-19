@@ -6,6 +6,7 @@ import 'package:firebase_project/component/home_page.dart';
 import 'package:firebase_project/component/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -207,8 +208,12 @@ class _LoginPageState extends State<LoginPage> {
           if (isLoading)
             Container(
               color: Colors.black.withOpacity(0.5), // Semi-transparent overlay
-              child: const Center(
-                child: CircularProgressIndicator(),
+              child: Center(
+                child: Lottie.asset(
+                  'assets/Animation/Loader3.json', // Path to the Lottie animation
+                  width: 300, // Width of the animation
+                  height: 300, // Height of the animation
+                ),
               ),
             ),
         ],
